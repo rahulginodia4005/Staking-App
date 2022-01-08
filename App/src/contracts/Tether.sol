@@ -9,17 +9,17 @@ contract Tether {
     event Transfer (
         address indexed _from,
         address indexed _to,
-        uint _value
+        uint256 _value
     );
 
     event Approval(
         address indexed _owner,
         address indexed _spender,
-        uint _value
+        uint256 _value
     );
 
-    mapping(address => uint) public balanceOf;
-    mapping(address => mapping(address => uint)) public allowance;
+    mapping(address => uint256) public balanceOf;
+    mapping(address => mapping(address => uint256)) public allowance;
 
 
     constructor() public {
@@ -27,7 +27,7 @@ contract Tether {
 
     }
 
-    function transfer(address _to, uint _value) public returns (bool success) {
+    function transfer(address _to, uint256 _value) public returns (bool success) {
         require(balanceOf[msg.sender] >= _value);
         balanceOf[msg.sender] -= _value;
         balanceOf[_to] += _value;
@@ -35,20 +35,20 @@ contract Tether {
         return true;
     }
 
-    function approve(address _spender, uint _value) public returns (bool success) {
-        allowance[msg.sender][_spender] -= _value;
+    function approve(address _spender, uint256 _value) public returns (bool success) {
+        allowance[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         return true;
 
     }
 
-    function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
-        require(balanceOf[_from] >= _value);
-        require(balanceOf[_from] >= allowance[_from][msg.sender]);        
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
+        require(_value <= balanceOf[_from]);
+        require(_value <= allowance[_from][msg.sender]);     
         balanceOf[_to] += _value;
         balanceOf[_from] -=  _value;
-        allowance[msg.sender][_from] -= _value;
-        emit Transfer(_from,_to,_value);
+        allowance[_from][msg.sender] -= _value;
+        emit Transfer(_from ,_to ,_value);
         return true;   
     }
 

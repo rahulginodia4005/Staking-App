@@ -1,4 +1,5 @@
 pragma solidity ^0.5.0;
+
 import './RWD.sol';
 import './Tether.sol';
 
@@ -18,20 +19,34 @@ contract DecentralBank {
     constructor(Tether _tether, RWD _rwd) public {
         tether = _tether;
         rwd = _rwd;
+        owner = msg.sender;
     }
 
-    function depositTokens(uint _amount) public {
+    function depositTokens(uint256 _amount) public {
         require(_amount>0, 'amount should be greater than zero');
         tether.transferFrom(msg.sender, address(this), _amount);
 
         stakingBalance[msg.sender] += _amount;
 
         if(!hasStaked[msg.sender]){
-            hasStaked[msg.sender] = true;
             stakers.push(msg.sender);
         }
+
+        hasStaked[msg.sender] = true;
         isStaking[msg.sender] = true;
 
+    }
+
+    function issueTokens() public {
+        require( msg.sender == owner);
+
+        for(uint i = 0;i<stakers.length ;i++){
+            address recipient = stakers[i];
+            uint balance = stakingBalance[recipient] /9 ;
+            if(balance > 0){
+                rwd.transfer(recipient, balance);
+            }
+        }
     }
         
 }

@@ -6,7 +6,7 @@ require('chai')
 .use(require('chai-as-promised'))
 .should()
 
-contract ('DecentralBank', ([owner,customer]) => {
+contract('DecentralBank', ([owner, customer]) => {
     let tether, rwd, decentralBank
 
     function tokens(number) {
@@ -16,7 +16,7 @@ contract ('DecentralBank', ([owner,customer]) => {
     before(async () => {
         tether = await Tether.new()
         rwd = await RWD.new()
-        decentralBank = await DecentralBank.new(tether.address, rwd.address)
+        decentralBank = await DecentralBank.new(rwd.address, tether.address)
 
         await rwd.transfer(decentralBank.address, tokens('1000000'))
         await tether.transfer(customer, tokens('100'), {from : owner})
@@ -45,16 +45,25 @@ contract ('DecentralBank', ([owner,customer]) => {
             let balance = await rwd.balanceOf(decentralBank.address)
             assert.equal(balance, tokens('1000000'))
         })
-    })
 
     describe('Yield Farming', async () => {
         it('reward tokens for staking', async () => {
-            let result = await tether.balanceOf(customer);
-            assert.equal(result,tokens('100'), 'investor tether balance before staking')
+            let result 
+            result = await tether.balanceOf(customer)
+            assert.equal(result ,tokens('100'), 'investor tether balance before staking')
+            
+            await tether.approve(decentralBank.address, tokens('5'), {from : customer})
+            await decentralBank.depositTokens(tokens('5'), {from: customer})
 
-            await tether.approve(decentralBank.address, tokens('100'), {from : customer})
-            await decentralBank.depositTokens(tokens('100'), {from : customer})
+            // let result2 = await tether.balanceOf(decentralBank.address)
+            // assert.equal(result2, tokens('0'))
+
+            // result = await decentralBank.isStaking(customer)
+            // assert.equal(result.toString(), 'true')
+
+            // await decentralBank.issueTokens({from : owner})
         })
+    })
     })
     
 })
