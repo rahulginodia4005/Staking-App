@@ -26,7 +26,7 @@ contract('DecentralBank', ([owner, customer]) => {
     describe('Tether Deployment', async () => {
         it('matches name successfully', async () => {
             const name = await tether.name()
-            assert.equal(name, 'Tether')
+            assert.equal(name, 'Mock Tether Token')
         })
     })
     describe('RWD Deployment', async () => {
