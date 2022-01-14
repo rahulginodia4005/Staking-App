@@ -81,19 +81,28 @@ class App extends Component {
     }
 
     stakeTokens = async (amount) => {
-        this.setState.loading = true;
+        this.setState({loading: true})
         await this.state.tether.methods.approve(this.state.decentralBank._address, amount).send({from: this.state.account})
         await this.state.decentralBank.methods.depositTokens(amount).send({from: this.state.account})
-        this.setState.loading = false;
+        this.setState({loading: false})
         
     }
 
     unstakeTokens = () => {
-        this.setState.loading = true;
+        this.setState({loading: true})
         this.state.decentralBank.methods.unstakeTokens().send({from: this.state.account}).on('transactionHash', (hash) => {
-            this.setState.loading = false;
+            this.setState({loading: false})
         })
     }
+
+    // issueTokens = async () => {
+    //     this.setState.loading = true;
+    //     const account = await window.web3.eth.getAccounts()
+    //     await this.state.decentralBank.methods.issueTokens().send({from : account[0]})
+    //     // let stakingBa = await this.state.decentralBank.methods.stakingBalance(this.state.account).call()
+    //     // await this.state.rwd.methods.transfer(this.state.account,stakingBa)
+    //     this.setState.loading = false;
+    // }
 
     constructor(props) {
         super(props)
@@ -116,7 +125,9 @@ class App extends Component {
         rwdBalance={this.state.rwdBalance}
         stakingBalance={this.state.stakingBalance}
         stakeTokens = {this.stakeTokens}
-        unstakeTokens = {this.unstakeTokens}/>}
+        unstakeTokens = {this.unstakeTokens}
+        // issueTokens = {this.issueTokens}
+        />}
         return (
             <div className='App' style={{position: 'relative'}}>
                 <div style={{position: 'absolute'}}>

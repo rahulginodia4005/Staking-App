@@ -1,11 +1,16 @@
 import React,{Component} from 'react'
 import Web3 from 'web3';
 import tether from '../tether.png'
+import Airdrop from './Airdrop';
 
 class Main extends Component {
+
+
     render() {
         return(
+
             <div id='content' className='mt-3'>
+                {/* {this.props.issueTokens()} */}
                 <table className='table text-muted text-center'>
                     <thead>
                         <tr style={{color:'black'}}>
@@ -56,7 +61,7 @@ class Main extends Component {
                         this.props.unstakeTokens()
                     }} className='btn btn-primary btn-lg btn-block'>WITHDRAW</button>
                     <div className='card-body text-center' style={{color:'blue'}}>
-                        AIRDROP
+                        AIRDROP : <Airdrop stakingBalance={this.props.stakingBalance} rwdBalance={this.props.rwdBalance}/>
                     </div>
                 </div>
 
